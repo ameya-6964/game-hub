@@ -1,37 +1,30 @@
 import {
   Button,
-  HStack,
   Heading,
+  HStack,
   Image,
   List,
   ListItem,
   Spinner,
-  Text,
-  VStack,
 } from "@chakra-ui/react";
 import useGenres, { Genre } from "../hooks/useGenres";
 import getCroppedImageUrl from "../services/image-url";
 
 interface Props {
-  onSelecGenre: (genre: Genre) => void;
+  onSelectGenre: (genre: Genre) => void;
   selectedGenre: Genre | null;
 }
 
-const GenreList = ({ onSelecGenre, selectedGenre }: Props) => {
+const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
   const { data, isLoading, error } = useGenres();
-  if (isLoading) {
-    return (
-      <VStack flex="flex" flexDirection={"column"}>
-        {data.map((genre) => (
-          <Spinner key={genre.id} />
-        ))}
-      </VStack>
-    );
-  }
+
   if (error) return null;
+
+  if (isLoading) return <Spinner />;
+
   return (
     <>
-      <Heading fontSize="2xl" marginBottom={3}>
+      <Heading fontSize="2xl" marginTop={9} marginBottom={3}>
         Genres
       </Heading>
       <List>
@@ -41,17 +34,16 @@ const GenreList = ({ onSelecGenre, selectedGenre }: Props) => {
               <Image
                 boxSize="32px"
                 borderRadius={8}
-                objectFit={"cover"}
+                objectFit="cover"
                 src={getCroppedImageUrl(genre.image_background)}
               />
               <Button
-                whiteSpace={"normal"}
-                textAlign={"left"}
+                whiteSpace="normal"
+                textAlign="left"
                 fontWeight={genre.id === selectedGenre?.id ? "bold" : "normal"}
-                onClick={() => onSelecGenre(genre)}
+                onClick={() => onSelectGenre(genre)}
+                fontSize="md"
                 variant="link"
-                fontSize="lg"
-                marginY={2}
               >
                 {genre.name}
               </Button>
